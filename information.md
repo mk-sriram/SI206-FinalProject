@@ -60,7 +60,6 @@
     & hourly = 1 ( 24 -> day average , or 1,3,6 -> and then map it to when the game occurs ? (data only matters when the game occurs))
 
 
-
 # API keys 
 working on this rn
 
@@ -85,7 +84,7 @@ CREATE TABLE football_games (
     turnovers INTEGER,
     penalties INTEGER,
 );
- 
+
 
 CREATE TABLE weather_data (
     
