@@ -1,9 +1,11 @@
 import requests
 import json
 import sqlite3
+import time 
 
 API_KEY = "YCk0uppo2tGeUarljXWxdKx61/+KnkWISco6EwKZnycklitueS8CAOFAQGHia1Sq"
 HEADERS = {"Authorization": f"Bearer {API_KEY}", "accept": "application/json"}
+
 
 
 def fetch_games(year, season_type="regular"):
@@ -24,7 +26,7 @@ def fetch_venues():
         response.raise_for_status()
         return response.json()
     except:
-        print(f"Error fetching venue data: {e}")
+        print(f"Error fetching venue data")
         return []
 
 def combine_data(games, venues):
@@ -130,6 +132,102 @@ def addFootBallDataToTable(combined_data):
     conn.close()
     print("Data successfully added to the 'football_games' table.")
 
+
+## WEATHER STUFF
+def fetch_weather(lat, lon, start, api_key):
+    url = "https://history.openweathermap.org/data/2.5/history/city"
+    params = {
+        "lat": lat,
+        "lon": lon,
+        "type": "hour",
+        "start": start,
+        "cnt": 1,
+        "appid": api_key,
+        "units": "metric"
+    }
+    response = requests.get(url, params=params)
+    if response.status_code == 200:
+        return response.json()
+    else:
+        print(f"Failed to fetch weather data for {lat}, {lon} at {start}: {response.text}")
+        return None
+
+def create_weather_table():
+    conn = sqlite3.connect("football_data.db")
+    cursor = conn.cursor()
+    cursor.execute('''
+    CREATE TABLE IF NOT EXISTS weather_data (
+        weather_id INTEGER PRIMARY KEY,
+        city TEXT NOT NULL,
+        latitude REAL,
+        longitude REAL,
+        weather_date DATE NOT NULL,
+        temperature REAL,
+        precipitation REAL,
+        wind_speed REAL,
+        humidity REAL,
+        weather_conditions TEXT
+    );
+    ''')
+    conn.commit()
+    conn.close()
+    print("Table 'weather_data' created successfully.")
+
+def addWeatherDataToTable(combined_data, api_key):
+    conn = sqlite3.connect("football_data.db")
+    cursor = conn.cursor()
+
+    for game in combined_data:
+        lat = game["latitude"]
+        lon = game["longitude"]
+        date = game["game_date"]
+
+        if lat and lon and date:
+            # Convert the game date to a Unix timestamp (start time)
+            print("datactautTIme,", date)
+            start = int(time.mktime(time.strptime(date, "%Y-%m-%d")))
+            print("startTIME", start)
+            # Fetch weather data for the game's location and date
+            weather_data = fetch_weather(lat, lon, start, api_key)
+            if weather_data and "list" in weather_data and len(weather_data["list"]) > 0:
+                weather = weather_data["list"][0]
+                temperature = weather["main"]["temp"]
+                precipitation = weather.get("rain", {}).get("1h", 0)
+                wind_speed = weather["wind"]["speed"]
+                humidity = weather["main"]["humidity"]
+                weather_conditions = weather["weather"][0]["description"] if "weather" in weather and weather["weather"] else None
+
+                # Insert weather data into weather_data table
+                cursor.execute('''
+                INSERT INTO weather_data (
+                    city, latitude, longitude, weather_date, temperature, 
+                    precipitation, wind_speed, humidity, weather_conditions
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+                ''', (
+                    game["city"],
+                    lat,
+                    lon,
+                    date,
+                    temperature,
+                    precipitation,
+                    wind_speed,
+                    humidity,
+                    weather_conditions
+                ))
+
+                # Get the last inserted weather_id
+                weather_id = cursor.lastrowid
+
+                # Update football_games table with the weather_id
+                cursor.execute('''
+                UPDATE football_games SET weather_id = ? WHERE game_id = ?
+                ''', (weather_id, game["game_id"]))
+
+    conn.commit()
+    conn.close()
+    print("Weather data successfully added to the 'weather_data' table and linked to 'football_games'.")
+
+
 #Main stuff
 year = 2020
 season_type = "regular"
@@ -148,3 +246,12 @@ print("Adding data...")
 addFootBallDataToTable(combined_data)
 
 print(f"Combined data saved to table.")
+
+
+#Weather
+create_weather_table()
+
+# Add weather data and link to football_games table
+api_key = "fd793c8c4b420589b7fb955ad7e89291"
+print("Fetching weather data and updating tables...")
+addWeatherDataToTable(combined_data, api_key)
