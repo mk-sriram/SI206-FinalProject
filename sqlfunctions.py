@@ -3,6 +3,10 @@ import json
 import sqlite3
 import time 
 
+# Install the SDK first: pip install openmeteo-requests
+from openmeteo_requests import Client
+from openmeteo_sdk.Variable import Variable
+
 API_KEY = "YCk0uppo2tGeUarljXWxdKx61/+KnkWISco6EwKZnycklitueS8CAOFAQGHia1Sq"
 HEADERS = {"Authorization": f"Bearer {API_KEY}", "accept": "application/json"}
 
@@ -134,23 +138,20 @@ def addFootBallDataToTable(combined_data):
 
 
 ## WEATHER STUFF
-def fetch_weather(lat, lon, start, api_key):
-    url = "https://history.openweathermap.org/data/2.5/history/city"
-    params = {
-        "lat": lat,
-        "lon": lon,
-        "type": "hour",
-        "start": start,
-        "cnt": 1,
-        "appid": api_key,
-        "units": "metric"
-    }
-    response = requests.get(url, params=params)
-    if response.status_code == 200:
+
+def fetch_weather(lat, lon, start_date, end_date):
+    """
+    Fetch hourly weather data for a location using the Open-Meteo SDK.
+    """
+    try:
+        print(lat, lon, start_date, end_date)
+        url = f"https://archive-api.open-meteo.com/v1/archive?latitude={lat}&longitude={lon}&start_date={start_date}&end_date={end_date}&hourly=temperature_2m,relative_humidity_2m,precipitation,cloud_cover,wind_speed_10m,wind_direction_10m"
+        response = requests.get(url)
+        response.raise_for_status()
         return response.json()
-    else:
-        print(f"Failed to fetch weather data for {lat}, {lon} at {start}: {response.text}")
-        return None
+    except Exception as e:
+        print(f"Error fetching games data: {response}")
+        return []
 
 def create_weather_table():
     conn = sqlite3.connect("football_data.db")
@@ -165,15 +166,79 @@ def create_weather_table():
         temperature REAL,
         precipitation REAL,
         wind_speed REAL,
+        wind_direction REAL,
         humidity REAL,
-        weather_conditions TEXT
+        cloud_cover REAL
     );
     ''')
     conn.commit()
     conn.close()
-    print("Table 'weather_data' created successfully.")
+    print("Table 'weather_data' created successfully with additional fields.")
 
-def addWeatherDataToTable(combined_data, api_key):
+
+# def addWeatherDataToTable(combined_data):
+#     """
+#     Fetch weather data for games and add it to the weather_data table, linking it with football_games.
+#     """
+#     conn = sqlite3.connect("football_data.db")
+#     cursor = conn.cursor()
+
+#     for game in combined_data:
+#         lat = game["latitude"]
+#         lon = game["longitude"]
+#         date = game["game_date"]
+
+#         if lat and lon and date:
+#             # Fetch weather data for the game's location and date
+#             weather_data = fetch_weather(lat, lon, date, date)
+
+#             if weather_data:
+#                 # Extract relevant weather data using the Open-Meteo SDK
+#                 hourly = weather_data.Hourly()
+#                 temperature = hourly.Variables(Variable.temperature, altitude=2).ValueArray() if hourly else None
+#                 precipitation = hourly.Variables(Variable.precipitation).ValueArray() if hourly else None
+#                 snowfall = hourly.Variables(Variable.snowfall).ValueArray() if hourly else None
+#                 wind_speed = hourly.Variables(Variable.wind_speed, altitude=10).ValueArray() if hourly else None
+#                 wind_direction = hourly.Variables(Variable.wind_direction, altitude=10).ValueArray() if hourly else None
+#                 humidity = hourly.Variables(Variable.relative_humidity, altitude=2).ValueArray() if hourly else None
+#                 cloud_cover = hourly.Variables(Variable.cloud_cover).ValueArray() if hourly else None
+
+#                 # Insert weather data into the weather_data table
+#                 cursor.execute('''
+#                 INSERT INTO weather_data (
+#                     city, latitude, longitude, weather_date, temperature, 
+#                     precipitation, snowfall, wind_speed, wind_direction, humidity, 
+#                     cloud_cover
+#                 ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+#                 ''', (
+#                     game["city"],
+#                     lat,
+#                     lon,
+#                     date,
+#                     temperature[0] if temperature else None,
+#                     precipitation[0] if precipitation else None,
+#                     snowfall[0] if snowfall else None,
+#                     wind_speed[0] if wind_speed else None,
+#                     wind_direction[0] if wind_direction else None,
+#                     humidity[0] if humidity else None,
+#                     cloud_cover[0] if cloud_cover else None
+#                 ))
+
+#                 # Get the last inserted weather_id
+#                 weather_id = cursor.lastrowid
+
+#                 # Update football_games table with the weather_id
+#                 cursor.execute('''
+#                 UPDATE football_games SET weather_id = ? WHERE game_id = ?
+#                 ''', (weather_id, game["game_id"]))
+
+#     conn.commit()
+#     conn.close()
+#     print("Weather data successfully added to the 'weather_data' table and linked to 'football_games'.")
+def addWeatherDataToTable(combined_data):
+    """
+    Fetch weather data for games and add it to the weather_data table, linking it with football_games.
+    """
     conn = sqlite3.connect("football_data.db")
     cursor = conn.cursor()
 
@@ -183,50 +248,70 @@ def addWeatherDataToTable(combined_data, api_key):
         date = game["game_date"]
 
         if lat and lon and date:
-            # Convert the game date to a Unix timestamp (start time)
-            print("datactautTIme,", date)
-            start = int(time.mktime(time.strptime(date, "%Y-%m-%d")))
-            print("startTIME", start)
             # Fetch weather data for the game's location and date
-            weather_data = fetch_weather(lat, lon, start, api_key)
-            if weather_data and "list" in weather_data and len(weather_data["list"]) > 0:
-                weather = weather_data["list"][0]
-                temperature = weather["main"]["temp"]
-                precipitation = weather.get("rain", {}).get("1h", 0)
-                wind_speed = weather["wind"]["speed"]
-                humidity = weather["main"]["humidity"]
-                weather_conditions = weather["weather"][0]["description"] if "weather" in weather and weather["weather"] else None
+            weather_data = fetch_weather(lat, lon, date, date)
+            if weather_data:
+                # Process the hourly data
+                print(game["game_id"], " ", weather_data)
+                # hourly = weather_data.Hourly()
+                # if hourly:
+                    #print()
+                    # Extract time and variables
+                    # times = [hourly.Time(i) for i in range(hourly.TimeLength())]
+                    # temperature_values = [hourly.Variables(Variable.temperature_2m).Values(i) for i in range(hourly.VariablesLength())]
+                    # precipitation_values = [hourly.Variables(Variable.precipitation).Values(i) for i in range(hourly.VariablesLength())]
+                    # snowfall_values = [hourly.Variables(Variable.snowfall).Values(i) for i in range(hourly.VariablesLength())]
+                    # wind_speed_values = [hourly.Variables(Variable.wind_speed_10m).Values(i) for i in range(hourly.VariablesLength())]
+                    # wind_direction_values = [hourly.Variables(Variable.wind_direction_10m).Values(i) for i in range(hourly.VariablesLength())]
+                    # humidity_values = [hourly.Variables(Variable.relative_humidity_2m).Values(i) for i in range(hourly.VariablesLength())]
+                    # cloud_cover_values = [hourly.Variables(Variable.cloud_cover).Values(i) for i in range(hourly.VariablesLength())]
 
-                # Insert weather data into weather_data table
-                cursor.execute('''
-                INSERT INTO weather_data (
-                    city, latitude, longitude, weather_date, temperature, 
-                    precipitation, wind_speed, humidity, weather_conditions
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-                ''', (
-                    game["city"],
-                    lat,
-                    lon,
-                    date,
-                    temperature,
-                    precipitation,
-                    wind_speed,
-                    humidity,
-                    weather_conditions
-                ))
+                    # # Match the closest time to the game's start time (assumes "game_time" is HH:MM)
+                    # game_time = f"{date}T{game['game_time']}" if game["game_time"] else None
+                    # if game_time in times:
+                    #     index = times.index(game_time)
 
-                # Get the last inserted weather_id
-                weather_id = cursor.lastrowid
+                    #     # Retrieve weather details for the matching time
+                    #     temperature = temperature_values[index]
+                    #     precipitation = precipitation_values[index]
+                    #     snowfall = snowfall_values[index]
+                    #     wind_speed = wind_speed_values[index]
+                    #     wind_direction = wind_direction_values[index]
+                    #     humidity = humidity_values[index]
+                    #     cloud_cover = cloud_cover_values[index]
 
-                # Update football_games table with the weather_id
-                cursor.execute('''
-                UPDATE football_games SET weather_id = ? WHERE game_id = ?
-                ''', (weather_id, game["game_id"]))
+                    #     # Insert weather data into the weather_data table
+                    #     cursor.execute('''
+                    #     INSERT INTO weather_data (
+                    #         city, latitude, longitude, weather_date, temperature, 
+                    #         precipitation, snowfall, wind_speed, wind_direction, humidity, 
+                    #         cloud_cover
+                    #     ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    #     ''', (
+                    #         game["city"],
+                    #         lat,
+                    #         lon,
+                    #         date,
+                    #         temperature,
+                    #         precipitation,
+                    #         snowfall,
+                    #         wind_speed,
+                    #         wind_direction,
+                    #         humidity,
+                    #         cloud_cover
+                    #     ))
+
+                    #     # Get the last inserted weather_id
+                    #     weather_id = cursor.lastrowid
+
+                    #     # Update football_games table with the weather_id
+                    #     cursor.execute('''
+                    #     UPDATE football_games SET weather_id = ? WHERE game_id = ?
+                    #     ''', (weather_id, game["game_id"]))
 
     conn.commit()
     conn.close()
     print("Weather data successfully added to the 'weather_data' table and linked to 'football_games'.")
-
 
 #Main stuff
 year = 2020
@@ -252,6 +337,5 @@ print(f"Combined data saved to table.")
 create_weather_table()
 
 # Add weather data and link to football_games table
-api_key = "fd793c8c4b420589b7fb955ad7e89291"
 print("Fetching weather data and updating tables...")
-addWeatherDataToTable(combined_data, api_key)
+addWeatherDataToTable(combined_data)
