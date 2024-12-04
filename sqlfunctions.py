@@ -180,6 +180,12 @@ from datetime import datetime
 from datetime import datetime, timedelta
 
 def find_closest_time_index(time_list, target_time):
+    
+    """""
+    DON"T do all that the 23rd index will be the 23rd index in that array, just extract the hour value and index 
+    
+    
+    """
     """
     Find the index of the closest time in the time_list to the given target_time in Zulu time.
 
@@ -345,6 +351,7 @@ def addWeatherDataFromDb():
     cursor = conn.cursor()
 
     for game in football_data:
+        print(game)
         game_id, game_date, game_time, city, lat, lon = game
 
         # Skip rows with missing location data
@@ -355,13 +362,15 @@ def addWeatherDataFromDb():
         # Fetch weather data for the game's location and date
         weather_data = fetch_weather(lat, lon, game_date, game_date)
         if not weather_data or "hourly" not in weather_data:
-            print(f"Failed to fetch weather data for game {game_id}.")
+            print(f"Failed to fetch weather data for game {game_id} {lat} {lon}.")
             continue
 
         # Find the closest time index
+        # DON"T do all that the 23rd index will be the 23rd index in that array, just extract the hour value and index 
+    
         hourly_times = weather_data["hourly"]["time"]
-        closest_index = find_closest_time_index(hourly_times, game_time)
-
+        closest_index = int(game_time[:2])
+        
         # Extract relevant weather data
         hourly = weather_data["hourly"]
         temperature = hourly["temperature_2m"][closest_index]
