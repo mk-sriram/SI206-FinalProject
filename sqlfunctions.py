@@ -49,8 +49,8 @@ def combine_data(games, venues):
                 "game_date": game["start_date"].split("T")[0] if "start_date" in game else None,
                 "game_time": game["start_date"].split("T")[1] if "start_date" in game and "T" in game["start_date"] else None,
                 "city": venue_data.get("city", "Unknown"),
-                "latitude": venue_data.get("location", {}).get("y"),
-                "longitude": venue_data.get("location", {}).get("x"),
+                "latitude": venue_data.get("location", {}).get("x"),
+                "longitude": venue_data.get("location", {}).get("y"),
                 "home_team": game["home_team"],
                 "away_team": game["away_team"],
                 "home_team_score": game["home_points"],
@@ -364,6 +364,7 @@ def addWeatherDataFromDb():
         if not weather_data or "hourly" not in weather_data:
             print(f"Failed to fetch weather data for game {game_id} {lat} {lon}.")
             continue
+        #print(weather_data)
 
         # Find the closest time index
         # DON"T do all that the 23rd index will be the 23rd index in that array, just extract the hour value and index 
@@ -414,7 +415,9 @@ games = fetch_games(year, season_type)
 print(f"Fetched {len(games)} games.")
 venues = fetch_venues()
 print(f"Fetched {len(venues)} venues.")
-
+# with open("venues.json", "w") as json_file:
+#     json.dump(venues, json_file, indent=4)
+# quit()
 combined_data = combine_data(games, venues)
 
 print("Creating table...")
@@ -425,7 +428,6 @@ print("Adding data...")
 addFootBallDataToTable(combined_data)
 
 print(f"Combined data saved to table.")
-
 
 #Weather
 create_weather_table()
