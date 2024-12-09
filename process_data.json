@@ -1,0 +1,366 @@
+{
+    "linear_regressions": {
+        "temperature": {
+            "slope": 0.3440925337713628,
+            "intercept": 75.42044829033537
+        },
+        "precipitation": {
+            "slope": 99999999,
+            "intercept": 56.827586206896555
+        },
+        "wind_speed": {
+            "slope": -0.011556123491258372,
+            "intercept": 57.11005372885443
+        }
+    },
+    "data": [
+        {
+            "total_points": 53,
+            "temperature": -43.9,
+            "precipitation": 0.0,
+            "wind_speed": 41.0
+        },
+        {
+            "total_points": 61,
+            "temperature": -50.6,
+            "precipitation": 0.0,
+            "wind_speed": 29.6
+        },
+        {
+            "total_points": 54,
+            "temperature": -50.7,
+            "precipitation": 0.0,
+            "wind_speed": 30.4
+        },
+        {
+            "total_points": 70,
+            "temperature": -55.6,
+            "precipitation": 0.0,
+            "wind_speed": 19.1
+        },
+        {
+            "total_points": 52,
+            "temperature": -50.4,
+            "precipitation": 0.0,
+            "wind_speed": 28.6
+        },
+        {
+            "total_points": 34,
+            "temperature": -50.9,
+            "precipitation": 0.0,
+            "wind_speed": 24.2
+        },
+        {
+            "total_points": 35,
+            "temperature": -49.5,
+            "precipitation": 0.0,
+            "wind_speed": 19.9
+        },
+        {
+            "total_points": 79,
+            "temperature": -52.8,
+            "precipitation": 0.0,
+            "wind_speed": 14.9
+        },
+        {
+            "total_points": 75,
+            "temperature": -52.5,
+            "precipitation": 0.0,
+            "wind_speed": 31.5
+        },
+        {
+            "total_points": 78,
+            "temperature": -49.1,
+            "precipitation": 0.0,
+            "wind_speed": 24.2
+        },
+        {
+            "total_points": 61,
+            "temperature": -51.5,
+            "precipitation": 0.0,
+            "wind_speed": 13.2
+        },
+        {
+            "total_points": 53,
+            "temperature": -57.4,
+            "precipitation": 0.0,
+            "wind_speed": 33.9
+        },
+        {
+            "total_points": 65,
+            "temperature": -50.0,
+            "precipitation": 0.0,
+            "wind_speed": 34.7
+        },
+        {
+            "total_points": 75,
+            "temperature": -57.8,
+            "precipitation": 0.0,
+            "wind_speed": 17.9
+        },
+        {
+            "total_points": 41,
+            "temperature": -54.9,
+            "precipitation": 0.0,
+            "wind_speed": 43.3
+        },
+        {
+            "total_points": 45,
+            "temperature": -61.6,
+            "precipitation": 0.0,
+            "wind_speed": 15.1
+        },
+        {
+            "total_points": 50,
+            "temperature": -67.7,
+            "precipitation": 0.0,
+            "wind_speed": 25.4
+        },
+        {
+            "total_points": 29,
+            "temperature": -55.9,
+            "precipitation": 0.0,
+            "wind_speed": 29.6
+        },
+        {
+            "total_points": 56,
+            "temperature": -57.3,
+            "precipitation": 0.0,
+            "wind_speed": 26.2
+        },
+        {
+            "total_points": 37,
+            "temperature": -70.0,
+            "precipitation": 0.0,
+            "wind_speed": 19.5
+        },
+        {
+            "total_points": 69,
+            "temperature": -57.0,
+            "precipitation": 0.0,
+            "wind_speed": 17.7
+        },
+        {
+            "total_points": 32,
+            "temperature": -64.8,
+            "precipitation": 0.0,
+            "wind_speed": 12.7
+        },
+        {
+            "total_points": 70,
+            "temperature": -49.7,
+            "precipitation": 0.0,
+            "wind_speed": 38.3
+        },
+        {
+            "total_points": 81,
+            "temperature": -51.6,
+            "precipitation": 0.0,
+            "wind_speed": 34.7
+        },
+        {
+            "total_points": 87,
+            "temperature": -65.4,
+            "precipitation": 0.0,
+            "wind_speed": 15.6
+        },
+        {
+            "total_points": 31,
+            "temperature": -63.5,
+            "precipitation": 0.0,
+            "wind_speed": 20.5
+        },
+        {
+            "total_points": 40,
+            "temperature": -57.5,
+            "precipitation": 0.0,
+            "wind_speed": 24.1
+        },
+        {
+            "total_points": 58,
+            "temperature": -56.7,
+            "precipitation": 0.0,
+            "wind_speed": 25.8
+        },
+        {
+            "total_points": 62,
+            "temperature": -53.0,
+            "precipitation": 0.0,
+            "wind_speed": 24.7
+        },
+        {
+            "total_points": 57,
+            "temperature": -49.9,
+            "precipitation": 0.0,
+            "wind_speed": 9.8
+        },
+        {
+            "total_points": 43,
+            "temperature": -55.2,
+            "precipitation": 0.0,
+            "wind_speed": 19.5
+        },
+        {
+            "total_points": 59,
+            "temperature": -48.0,
+            "precipitation": 0.0,
+            "wind_speed": 5.5
+        },
+        {
+            "total_points": 58,
+            "temperature": -57.9,
+            "precipitation": 0.0,
+            "wind_speed": 16.1
+        },
+        {
+            "total_points": 90,
+            "temperature": -54.2,
+            "precipitation": 0.0,
+            "wind_speed": 20.6
+        },
+        {
+            "total_points": 48,
+            "temperature": -48.6,
+            "precipitation": 0.0,
+            "wind_speed": 6.5
+        },
+        {
+            "total_points": 66,
+            "temperature": -67.9,
+            "precipitation": 0.0,
+            "wind_speed": 21.1
+        },
+        {
+            "total_points": 55,
+            "temperature": -58.6,
+            "precipitation": 0.0,
+            "wind_speed": 35.7
+        },
+        {
+            "total_points": 73,
+            "temperature": -52.2,
+            "precipitation": 0.0,
+            "wind_speed": 25.5
+        },
+        {
+            "total_points": 24,
+            "temperature": -54.7,
+            "precipitation": 0.0,
+            "wind_speed": 35.3
+        },
+        {
+            "total_points": 86,
+            "temperature": -56.0,
+            "precipitation": 0.0,
+            "wind_speed": 19.1
+        },
+        {
+            "total_points": 42,
+            "temperature": -51.9,
+            "precipitation": 0.0,
+            "wind_speed": 24.9
+        },
+        {
+            "total_points": 58,
+            "temperature": -54.0,
+            "precipitation": 0.0,
+            "wind_speed": 25.3
+        },
+        {
+            "total_points": 76,
+            "temperature": -53.0,
+            "precipitation": 0.0,
+            "wind_speed": 23.1
+        },
+        {
+            "total_points": 62,
+            "temperature": -46.9,
+            "precipitation": 0.0,
+            "wind_speed": 22.4
+        },
+        {
+            "total_points": 47,
+            "temperature": -49.5,
+            "precipitation": 0.0,
+            "wind_speed": 22.5
+        },
+        {
+            "total_points": 51,
+            "temperature": -54.6,
+            "precipitation": 0.0,
+            "wind_speed": 20.9
+        },
+        {
+            "total_points": 35,
+            "temperature": -59.1,
+            "precipitation": 0.0,
+            "wind_speed": 16.0
+        },
+        {
+            "total_points": 80,
+            "temperature": -44.5,
+            "precipitation": 0.0,
+            "wind_speed": 48.1
+        },
+        {
+            "total_points": 51,
+            "temperature": -59.9,
+            "precipitation": 0.0,
+            "wind_speed": 21.9
+        },
+        {
+            "total_points": 33,
+            "temperature": -56.1,
+            "precipitation": 0.0,
+            "wind_speed": 25.6
+        },
+        {
+            "total_points": 78,
+            "temperature": -50.6,
+            "precipitation": 0.0,
+            "wind_speed": 34.4
+        },
+        {
+            "total_points": 44,
+            "temperature": -53.1,
+            "precipitation": 0.0,
+            "wind_speed": 35.9
+        },
+        {
+            "total_points": 64,
+            "temperature": -53.0,
+            "precipitation": 0.0,
+            "wind_speed": 8.6
+        },
+        {
+            "total_points": 80,
+            "temperature": -53.7,
+            "precipitation": 0.0,
+            "wind_speed": 22.0
+        },
+        {
+            "total_points": 61,
+            "temperature": -50.6,
+            "precipitation": 0.0,
+            "wind_speed": 31.4
+        },
+        {
+            "total_points": 34,
+            "temperature": -52.5,
+            "precipitation": 0.0,
+            "wind_speed": 23.5
+        },
+        {
+            "total_points": 45,
+            "temperature": -29.1,
+            "precipitation": 0.0,
+            "wind_speed": 39.8
+        },
+        {
+            "total_points": 63,
+            "temperature": -49.4,
+            "precipitation": 0.0,
+            "wind_speed": 20.4
+        }
+    ]
+}
