@@ -154,3 +154,12 @@ def make_plot():
 make_plot()
 
 
+#with new API will be adding more plots
+
+#------------------------- structure -------------------------
+
+#1.) Load data
+#2.) Get it in a good format
+#3.) Extract data wanted for plotting
+#4.) Begin making plots
+#5.) Call plots
