@@ -1,16 +1,16 @@
 {
     "linear_regressions": {
         "temperature": {
-            "slope": 0.176274536955976,
-            "intercept": 53.77160574805393
+            "slope": 0.18546456907775505,
+            "intercept": 53.26037675200547
         },
         "precipitation": {
-            "slope": -2.956093957516359,
-            "intercept": 58.154633828163675
+            "slope": -2.826855771168894,
+            "intercept": 57.854726696351676
         },
         "wind_speed": {
-            "slope": -0.3688049832134203,
-            "intercept": 62.03718024225205
+            "slope": -0.316444484752332,
+            "intercept": 61.227080608099826
         }
     },
     "data": [
@@ -18,565 +18,624 @@
             "total_points": 88,
             "temperature": 30.0,
             "precipitation": 0.0,
-            "wind_speed": 8.8
+            "wind_speed": 8.8,
+            "visibility": 9.9
         },
         {
             "total_points": 53,
             "temperature": 27.3,
             "precipitation": 0.0,
-            "wind_speed": 6.7
+            "wind_speed": 6.7,
+            "visibility": 9.1
         },
         {
             "total_points": 61,
             "temperature": 23.1,
             "precipitation": 0.0,
-            "wind_speed": 15.3
+            "wind_speed": 15.3,
+            "visibility": 9.9
         },
         {
             "total_points": 99,
             "temperature": 29.5,
             "precipitation": 0.4,
-            "wind_speed": 9.2
+            "wind_speed": 9.2,
+            "visibility": 9.9
         },
         {
             "total_points": 100,
             "temperature": 26.8,
             "precipitation": 0.0,
-            "wind_speed": 12.0
+            "wind_speed": 12.0,
+            "visibility": 9.9
         },
         {
             "total_points": 54,
             "temperature": 18.1,
             "precipitation": 0.0,
-            "wind_speed": 9.7
+            "wind_speed": 9.7,
+            "visibility": 9.9
         },
         {
             "total_points": 70,
             "temperature": 22.5,
             "precipitation": 0.0,
-            "wind_speed": 5.2
+            "wind_speed": 5.2,
+            "visibility": 9.9
         },
         {
             "total_points": 52,
             "temperature": 25.9,
             "precipitation": 0.0,
-            "wind_speed": 15.3
+            "wind_speed": 15.3,
+            "visibility": 9.9
         },
         {
             "total_points": 72,
             "temperature": 28.5,
             "precipitation": 0.0,
-            "wind_speed": 6.1
+            "wind_speed": 6.1,
+            "visibility": 9.9
         },
         {
             "total_points": 34,
             "temperature": 18.5,
             "precipitation": 0.0,
-            "wind_speed": 6.9
+            "wind_speed": 6.9,
+            "visibility": 9.9
         },
         {
             "total_points": 35,
             "temperature": 16.8,
             "precipitation": 0.0,
-            "wind_speed": 10.9
+            "wind_speed": 10.9,
+            "visibility": 9.9
         },
         {
             "total_points": 55,
             "temperature": 28.8,
             "precipitation": 0.3,
-            "wind_speed": 10.3
+            "wind_speed": 10.3,
+            "visibility": 9.9
         },
         {
             "total_points": 57,
             "temperature": 28.2,
             "precipitation": 0.0,
-            "wind_speed": 18.2
+            "wind_speed": 18.2,
+            "visibility": 9.9
         },
         {
             "total_points": 57,
             "temperature": 27.2,
             "precipitation": 0.0,
-            "wind_speed": 19.1
+            "wind_speed": 19.1,
+            "visibility": 9.9
         },
         {
             "total_points": 51,
             "temperature": 22.3,
             "precipitation": 3.2,
-            "wind_speed": 26.0
+            "wind_speed": 26.0,
+            "visibility": 7.4
         },
         {
             "total_points": 79,
             "temperature": 24.8,
             "precipitation": 0.0,
-            "wind_speed": 10.5
+            "wind_speed": 10.5,
+            "visibility": 9.9
         },
         {
             "total_points": 75,
             "temperature": 15.6,
             "precipitation": 0.0,
-            "wind_speed": 14.5
+            "wind_speed": 14.5,
+            "visibility": 9.9
         },
         {
             "total_points": 78,
             "temperature": 18.2,
             "precipitation": 0.0,
-            "wind_speed": 10.8
+            "wind_speed": 10.8,
+            "visibility": 9.9
         },
         {
             "total_points": 61,
             "temperature": 25.5,
             "precipitation": 0.0,
-            "wind_speed": 7.4
+            "wind_speed": 7.4,
+            "visibility": 9.9
         },
         {
             "total_points": 53,
             "temperature": 31.7,
             "precipitation": 0.3,
-            "wind_speed": 18.9
+            "wind_speed": 18.9,
+            "visibility": 9.9
         },
         {
             "total_points": 65,
             "temperature": 19.1,
             "precipitation": 0.0,
-            "wind_speed": 19.6
+            "wind_speed": 19.6,
+            "visibility": 9.9
         },
         {
             "total_points": 55,
             "temperature": 26.7,
             "precipitation": 0.0,
-            "wind_speed": 19.2
+            "wind_speed": 19.2,
+            "visibility": 9.9
         },
         {
             "total_points": 38,
             "temperature": 25.6,
             "precipitation": 0.2,
-            "wind_speed": 6.5
+            "wind_speed": 6.5,
+            "visibility": 9.9
         },
         {
             "total_points": 75,
             "temperature": 20.8,
             "precipitation": 0.0,
-            "wind_speed": 17.7
+            "wind_speed": 17.7,
+            "visibility": 9.9
         },
         {
             "total_points": 41,
             "temperature": 27.2,
             "precipitation": 0.0,
-            "wind_speed": 6.6
+            "wind_speed": 6.6,
+            "visibility": 9.9
         },
         {
             "total_points": 104,
             "temperature": 24.4,
             "precipitation": 0.0,
-            "wind_speed": 8.8
+            "wind_speed": 8.8,
+            "visibility": 5.1
         },
         {
             "total_points": 45,
             "temperature": 26.4,
             "precipitation": 0.0,
-            "wind_speed": 4.7
+            "wind_speed": 4.7,
+            "visibility": 9.9
         },
         {
             "total_points": 50,
             "temperature": 25.0,
             "precipitation": 0.0,
-            "wind_speed": 10.4
+            "wind_speed": 10.4,
+            "visibility": 9.9
         },
         {
             "total_points": 29,
             "temperature": 31.4,
             "precipitation": 0.5,
-            "wind_speed": 15.9
+            "wind_speed": 15.9,
+            "visibility": 9.9
         },
         {
             "total_points": 56,
             "temperature": 24.5,
             "precipitation": 1.2,
-            "wind_speed": 10.9
+            "wind_speed": 10.9,
+            "visibility": 9.9
         },
         {
             "total_points": 37,
             "temperature": 25.3,
             "precipitation": 0.1,
-            "wind_speed": 16.5
+            "wind_speed": 16.5,
+            "visibility": 9.9
         },
         {
             "total_points": 69,
             "temperature": 17.4,
             "precipitation": 0.0,
-            "wind_speed": 0.4
+            "wind_speed": 0.4,
+            "visibility": 0.0
         },
         {
             "total_points": 32,
             "temperature": 15.7,
             "precipitation": 0.0,
-            "wind_speed": 17.8
+            "wind_speed": 17.8,
+            "visibility": 9.9
         },
         {
             "total_points": 70,
             "temperature": 20.8,
             "precipitation": 0.0,
-            "wind_speed": 17.5
+            "wind_speed": 17.5,
+            "visibility": 9.9
         },
         {
             "total_points": 81,
             "temperature": 18.5,
             "precipitation": 0.0,
-            "wind_speed": 8.2
+            "wind_speed": 8.2,
+            "visibility": 9.9
         },
         {
             "total_points": 87,
             "temperature": 14.6,
             "precipitation": 0.0,
-            "wind_speed": 14.2
+            "wind_speed": 14.2,
+            "visibility": 9.9
         },
         {
             "total_points": 31,
             "temperature": 14.3,
             "precipitation": 0.0,
-            "wind_speed": 9.3
+            "wind_speed": 9.3,
+            "visibility": 9.9
         },
         {
             "total_points": 40,
             "temperature": 24.1,
             "precipitation": 0.1,
-            "wind_speed": 16.2
+            "wind_speed": 16.2,
+            "visibility": 8.6
         },
         {
             "total_points": 58,
             "temperature": 20.4,
             "precipitation": 0.0,
-            "wind_speed": 7.6
+            "wind_speed": 7.6,
+            "visibility": 9.9
         },
         {
             "total_points": 62,
             "temperature": 26.3,
             "precipitation": 0.0,
-            "wind_speed": 5.2
+            "wind_speed": 5.2,
+            "visibility": 9.9
         },
         {
             "total_points": 57,
             "temperature": 24.2,
             "precipitation": 0.0,
-            "wind_speed": 12.0
+            "wind_speed": 12.0,
+            "visibility": 9.9
         },
         {
             "total_points": 43,
             "temperature": 24.0,
             "precipitation": 0.0,
-            "wind_speed": 6.8
+            "wind_speed": 6.8,
+            "visibility": 9.9
         },
         {
             "total_points": 59,
             "temperature": 14.8,
             "precipitation": 0.0,
-            "wind_speed": 6.8
+            "wind_speed": 6.8,
+            "visibility": 9.9
         },
         {
             "total_points": 58,
             "temperature": 25.0,
             "precipitation": 0.0,
-            "wind_speed": 6.5
+            "wind_speed": 6.5,
+            "visibility": 9.9
         },
         {
             "total_points": 90,
             "temperature": 23.8,
             "precipitation": 0.0,
-            "wind_speed": 3.6
+            "wind_speed": 3.6,
+            "visibility": 8.6
         },
         {
             "total_points": 61,
             "temperature": 29.5,
             "precipitation": 0.0,
-            "wind_speed": 16.3
+            "wind_speed": 16.3,
+            "visibility": 9.9
         },
         {
             "total_points": 71,
             "temperature": 27.5,
             "precipitation": 0.0,
-            "wind_speed": 20.2
+            "wind_speed": 20.2,
+            "visibility": 9.9
         },
         {
             "total_points": 119,
             "temperature": 34.0,
             "precipitation": 0.0,
-            "wind_speed": 19.3
+            "wind_speed": 19.3,
+            "visibility": 9.9
         },
         {
             "total_points": 73,
             "temperature": 24.5,
             "precipitation": 0.0,
-            "wind_speed": 18.5
+            "wind_speed": 18.5,
+            "visibility": 9.9
         },
         {
             "total_points": 40,
             "temperature": 30.0,
             "precipitation": 0.0,
-            "wind_speed": 19.5
+            "wind_speed": 19.5,
+            "visibility": 9.9
         },
         {
             "total_points": 48,
             "temperature": 14.4,
             "precipitation": 0.0,
-            "wind_speed": 5.4
+            "wind_speed": 5.4,
+            "visibility": 9.9
         },
         {
             "total_points": 54,
             "temperature": 18.4,
             "precipitation": 0.0,
-            "wind_speed": 19.6
+            "wind_speed": 19.6,
+            "visibility": 9.9
         },
         {
             "total_points": 52,
             "temperature": 18.8,
             "precipitation": 0.0,
-            "wind_speed": 22.1
-        },
-        {
-            "total_points": 64,
-            "temperature": 23.3,
-            "precipitation": 0.0,
-            "wind_speed": 12.6
+            "wind_speed": 22.1,
+            "visibility": 9.9
         },
         {
             "total_points": 66,
             "temperature": 26.7,
             "precipitation": 0.1,
-            "wind_speed": 10.8
+            "wind_speed": 10.8,
+            "visibility": 9.9
         },
         {
             "total_points": 68,
             "temperature": 27.2,
             "precipitation": 0.0,
-            "wind_speed": 2.6
+            "wind_speed": 2.6,
+            "visibility": 9.9
         },
         {
             "total_points": 23,
             "temperature": 22.0,
             "precipitation": 0.0,
-            "wind_speed": 9.0
+            "wind_speed": 9.0,
+            "visibility": 8.1
         },
         {
             "total_points": 66,
             "temperature": 20.6,
             "precipitation": 0.0,
-            "wind_speed": 17.4
-        },
-        {
-            "total_points": 55,
-            "temperature": 19.4,
-            "precipitation": 1.2,
-            "wind_speed": 16.5
-        },
-        {
-            "total_points": 45,
-            "temperature": 17.6,
-            "precipitation": 0.0,
-            "wind_speed": 8.3
+            "wind_speed": 17.4,
+            "visibility": 9.9
         },
         {
             "total_points": 62,
             "temperature": 29.1,
             "precipitation": 0.0,
-            "wind_speed": 7.4
+            "wind_speed": 7.4,
+            "visibility": 9.9
         },
         {
             "total_points": 55,
             "temperature": 18.4,
             "precipitation": 0.0,
-            "wind_speed": 7.3
-        },
-        {
-            "total_points": 73,
-            "temperature": 19.4,
-            "precipitation": 0.0,
-            "wind_speed": 1.9
+            "wind_speed": 7.3,
+            "visibility": 9.9
         },
         {
             "total_points": 47,
             "temperature": 20.2,
             "precipitation": 0.0,
-            "wind_speed": 9.7
+            "wind_speed": 9.7,
+            "visibility": 8.5
         },
         {
             "total_points": 61,
             "temperature": 20.2,
             "precipitation": 0.0,
-            "wind_speed": 10.2
+            "wind_speed": 10.2,
+            "visibility": 6.1
         },
         {
             "total_points": 24,
             "temperature": 20.3,
             "precipitation": 0.0,
-            "wind_speed": 7.9
+            "wind_speed": 7.9,
+            "visibility": 9.9
         },
         {
             "total_points": 57,
             "temperature": 28.4,
             "precipitation": 0.0,
-            "wind_speed": 13.3
+            "wind_speed": 13.3,
+            "visibility": 9.9
         },
         {
             "total_points": 86,
             "temperature": 23.3,
             "precipitation": 0.0,
-            "wind_speed": 9.7
+            "wind_speed": 9.7,
+            "visibility": 9.2
         },
         {
             "total_points": 47,
             "temperature": 27.2,
             "precipitation": 0.0,
-            "wind_speed": 13.0
+            "wind_speed": 13.0,
+            "visibility": 9.9
         },
         {
             "total_points": 42,
             "temperature": 24.7,
             "precipitation": 0.0,
-            "wind_speed": 4.7
+            "wind_speed": 4.7,
+            "visibility": 9.9
         },
         {
             "total_points": 78,
             "temperature": 26.9,
             "precipitation": 0.0,
-            "wind_speed": 2.3
+            "wind_speed": 2.3,
+            "visibility": 9.9
         },
         {
             "total_points": 58,
             "temperature": 22.9,
             "precipitation": 0.0,
-            "wind_speed": 6.5
+            "wind_speed": 6.5,
+            "visibility": 8.7
         },
         {
             "total_points": 29,
             "temperature": 28.3,
             "precipitation": 0.0,
-            "wind_speed": 9.7
-        },
-        {
-            "total_points": 76,
-            "temperature": 21.9,
-            "precipitation": 0.0,
-            "wind_speed": 4.9
+            "wind_speed": 9.7,
+            "visibility": 9.9
         },
         {
             "total_points": 62,
             "temperature": 23.3,
             "precipitation": 0.0,
-            "wind_speed": 11.4
+            "wind_speed": 11.4,
+            "visibility": 9.9
         },
         {
             "total_points": 47,
             "temperature": 16.6,
             "precipitation": 0.0,
-            "wind_speed": 4.1
+            "wind_speed": 4.1,
+            "visibility": 9.9
         },
         {
             "total_points": 51,
             "temperature": 26.4,
             "precipitation": 0.0,
-            "wind_speed": 12.2
+            "wind_speed": 12.2,
+            "visibility": 9.0
         },
         {
             "total_points": 35,
             "temperature": 17.2,
             "precipitation": 0.0,
-            "wind_speed": 2.5
+            "wind_speed": 2.5,
+            "visibility": 9.9
         },
         {
             "total_points": 80,
             "temperature": 26.9,
             "precipitation": 0.0,
-            "wind_speed": 6.4
+            "wind_speed": 6.4,
+            "visibility": 9.7
         },
         {
             "total_points": 38,
             "temperature": 30.3,
             "precipitation": 0.0,
-            "wind_speed": 23.8
+            "wind_speed": 23.8,
+            "visibility": 9.9
         },
         {
             "total_points": 30,
             "temperature": 27.4,
             "precipitation": 0.0,
-            "wind_speed": 15.0
+            "wind_speed": 15.0,
+            "visibility": 9.9
         },
         {
             "total_points": 51,
             "temperature": 29.2,
             "precipitation": 0.7,
-            "wind_speed": 4.2
+            "wind_speed": 4.2,
+            "visibility": 9.9
         },
         {
             "total_points": 33,
             "temperature": 26.9,
             "precipitation": 0.0,
-            "wind_speed": 28.5
+            "wind_speed": 28.5,
+            "visibility": 9.9
         },
         {
             "total_points": 78,
             "temperature": 16.9,
             "precipitation": 0.0,
-            "wind_speed": 9.2
+            "wind_speed": 9.2,
+            "visibility": 9.9
         },
         {
             "total_points": 34,
             "temperature": 28.6,
             "precipitation": 0.0,
-            "wind_speed": 17.4
+            "wind_speed": 17.4,
+            "visibility": 9.9
         },
         {
             "total_points": 44,
             "temperature": 21.3,
             "precipitation": 0.0,
-            "wind_speed": 10.2
+            "wind_speed": 10.2,
+            "visibility": 9.9
         },
         {
             "total_points": 64,
             "temperature": 22.9,
             "precipitation": 0.0,
-            "wind_speed": 15.6
+            "wind_speed": 15.6,
+            "visibility": 9.9
         },
         {
             "total_points": 37,
             "temperature": 26.4,
             "precipitation": 0.0,
-            "wind_speed": 5.4
+            "wind_speed": 5.4,
+            "visibility": 9.9
         },
         {
             "total_points": 80,
             "temperature": 14.4,
             "precipitation": 0.0,
-            "wind_speed": 6.6
+            "wind_speed": 6.6,
+            "visibility": 9.9
         },
         {
             "total_points": 61,
             "temperature": 21.5,
             "precipitation": 0.0,
-            "wind_speed": 2.2
+            "wind_speed": 2.2,
+            "visibility": 9.9
         },
         {
             "total_points": 34,
             "temperature": 25.6,
             "precipitation": 0.0,
-            "wind_speed": 14.2
+            "wind_speed": 14.2,
+            "visibility": 9.9
         },
         {
             "total_points": 45,
             "temperature": 22.1,
             "precipitation": 0.0,
-            "wind_speed": 20.4
+            "wind_speed": 20.4,
+            "visibility": 9.9
         },
         {
             "total_points": 59,
             "temperature": 21.3,
             "precipitation": 0.0,
-            "wind_speed": 4.8
+            "wind_speed": 4.8,
+            "visibility": 9.9
         },
         {
             "total_points": 63,
             "temperature": 18.2,
             "precipitation": 0.0,
-            "wind_speed": 4.7
+            "wind_speed": 4.7,
+            "visibility": 9.9
         }
     ]
 }

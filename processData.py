@@ -8,6 +8,7 @@ POINTS_INDEX = 0
 TEMPERATURE_INDEX = 1
 PRECIPITATION_INDEX = 2
 WIND_INDEX = 3
+VISIBILITY_INDEX = 4
 JSON_OUTPUT_FILENAME = "process_data.json"
 
 
@@ -27,7 +28,8 @@ def fetch_football_weather_data():
     join_command = f"""SELECT football_games.total_points, 
                           weather_data.temperature, 
                           weather_data.precipitation, 
-                          weather_data.wind_speed
+                          weather_data.wind_speed,
+                          weather_data.visibility
                    FROM football_games
                    INNER JOIN weather_data 
                    ON football_games.weather_id = weather_data.weather_id"""
@@ -100,6 +102,7 @@ def save_to_json_file(rows, regressions, filename=JSON_OUTPUT_FILENAME):
             "temperature": row[TEMPERATURE_INDEX],
             "precipitation": row[PRECIPITATION_INDEX],
             "wind_speed": row[WIND_INDEX],
+            "visibility": row[VISIBILITY_INDEX],
         }
         for row in rows
     ]
