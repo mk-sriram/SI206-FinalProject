@@ -21,6 +21,7 @@ def initialize_dict():
     temperature_celsius = []
     precipitation       = []
     wind_speed          = []
+    visibility          = []
 
     #initializing total_points
     for i in range(len(data["data"])):
@@ -34,7 +35,10 @@ def initialize_dict():
     #intializing wind_speed
     for i in range(len(data["data"])):
         wind_speed.append(data["data"][i]['wind_speed'])
-    return (total_points, temperature_celsius, precipitation, wind_speed)
+    #initializing visibility
+    for i in range(len(data["data"])):
+        visibility.append(data["data"][i]['visibility'])
+    return (total_points, temperature_celsius, precipitation, wind_speed, visibility)
 
 #prepping for plotting
 def set_plot_data():
@@ -45,6 +49,7 @@ def set_plot_data():
     plot_data['temp'] = vals[1]
     plot_data['prec'] = vals[2]
     plot_data['wind'] = vals[3]
+    plot_data['visi'] = vals[4]
 
     return (plot_data, vals)
 
@@ -56,8 +61,10 @@ def linear_regression(vals):
     prec_line_reg["label"] = "Precipitation"
     wind_line_reg = calc_linear_regression(vals, 3, 0)
     wind_line_reg["label"] = "Wind_Speed"
+    visi_line_reg = calc_linear_regression(vals, 4, 0)
+    visi_line_reg["label"] = "Visibility"
 
-    return(temp_line_reg, prec_line_reg, wind_line_reg)
+    return(temp_line_reg, prec_line_reg, wind_line_reg, visi_line_reg)
 
 #drawing up all plots
 def make_plot():
@@ -103,16 +110,24 @@ def make_plot():
                             title="Total Points Scored vs Wind Speed",
                             labels={"x": "Wind Speed", "y": "Total Points Scored"}  # Label the axes
                             )
+    fig_totalPoints_vs_visi = px.scatter(
+                            x=plot_data['visi'], 
+                            y=plot_data['total_points'], 
+                            title="Total Points Scored vs Visibility",
+                            labels={"x": "Visibility", "y": "Total Points Scored"}  # Label the axes
+                            )
 
     #bar plot calcs
     bar_plot_data = {
-                    "Category": ["Temperature", "Precipitation", "Wind_Speed"],
+                    "Category": ["Temperature", "Precipitation", "Wind_Speed", "Visibility"],
                     "Averages": [linear_regressions[0]['slope'],
                                  linear_regressions[1]['slope'],
-                                 linear_regressions[2]['slope']],
+                                 linear_regressions[2]['slope'],
+                                 linear_regressions[3]['slope']],
                     "line"    : [linear_regressions[0]['label'],
                                  linear_regressions[1]['label'],
-                                 linear_regressions[2]['label']]
+                                 linear_regressions[2]['label'],
+                                 linear_regressions[3]['label']]
     }
 
     #data frame for bar plot
@@ -126,11 +141,12 @@ def make_plot():
                  title="Linear Regressions by Category"
                  )
 
-    fig = make_subplots(rows=5, 
+    fig = make_subplots(rows=6, 
                     cols=1, 
                     subplot_titles=("Total Points Scored vs Temperature(celsius)", 
                                                     "Total Points Scored vs Precipitation",
                                                     "Total Points Scored vs Wind Speed",
+                                                    "Total Points Scored vs Visibility",
                                                     "Linear Regressions Slopes",
                                                     "Linear Regression Slopes Bar Plot"),
                     shared_yaxes= False                                
@@ -139,12 +155,14 @@ def make_plot():
     fig.add_trace(fig_totalPoints_vs_temp.data[0], row=1, col=1)  # Add scatter data
     fig.add_trace(fig_totalPoints_vs_prec.data[0], row=2, col=1)      # Add bar data
     fig.add_trace(fig_totalPoints_vs_wind.data[0], row=3, col=1)     # Add line data
+    fig.add_trace(fig_totalPoints_vs_visi.data[0], row=4, col=1)     # Add line data
+
     #adding linear regressions in slope form
     for trace in fig_threeRegressions.data:
-        fig.add_trace(trace, row=4, col=1)
+        fig.add_trace(trace, row=5, col=1)
     #adding linear regressions by category
     for trace in fig_bar_plot.data:
-        fig.add_trace(trace, row=5, col=1)
+        fig.add_trace(trace, row=6, col=1)
 
     fig.update_layout(height=900, width=1200, title_text="Total Points scored vs conditions")
 
