@@ -2,6 +2,14 @@
 import requests
 import sqlite3
 from datetime import datetime
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+apiKey = os.getenv("VISUAL")
+
+
+
 
 def fetch_weather(lat, lon, start_date, end_date):
     """
@@ -17,9 +25,28 @@ def fetch_weather(lat, lon, start_date, end_date):
         print(f"Error fetching games data: {response}")
         return []
 
+def fetch_visibility(lat, lon, date, apiKey):
+    """
+    Fetch hourly visibility data for a location and date using the Visual Crossing Weather API.
+    We assume we only need the data for one date (same start and end date).
+    """
+    try:
+        url = (f"https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/"
+               f"timeline/{lat},{lon}/{date}/{date}?unitGroup=us&include=hours&key={apiKey}")
+        response = requests.get(url)
+        response.raise_for_status()
+        return response.json()
+    except Exception as e:
+        print(f"Error fetching visibility data: {e}")
+        return {}
+
 def create_weather_table():
     conn = sqlite3.connect("football_data.db")
     cursor = conn.cursor()
+    
+#     cursor.execute('''
+#     DROP TABLE IF EXISTS weather_data;
+# ''')
     cursor.execute('''
     CREATE TABLE IF NOT EXISTS weather_data (
         weather_id INTEGER PRIMARY KEY,
@@ -33,6 +60,7 @@ def create_weather_table():
         wind_direction REAL,
         humidity REAL,
         cloud_cover REAL
+        visibility REAL
     );
     ''')
     conn.commit()
@@ -105,6 +133,16 @@ def addWeatherDataFromDb():
             print(f"Failed to fetch weather data for game {game_id} {lat} {lon}.")
             continue
         #print(weather_data)
+        
+        
+        visibility_data = fetch_visibility(lat, lon, game_date, apiKey)
+        visibility = None
+        if "days" in visibility_data and visibility_data["days"]:
+            hours_data = visibility_data["days"][0].get("hours", [])
+            if len(hours_data) > closest_index:
+                visibility = hours_data[closest_index].get("visibility", None)
+
+
 
         # Find the closest time index
         # DON"T do all that the 23rd index will be the 23rd index in that array, just extract the hour value and index 
@@ -126,13 +164,14 @@ def addWeatherDataFromDb():
             INSERT INTO weather_data (
                 city, latitude, longitude, weather_date, temperature, 
                 precipitation, wind_speed, wind_direction, humidity, 
-                cloud_cover
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                cloud_cover, visibility
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         ''', (
             city, lat, lon, game_date, temperature, 
             precipitation, wind_speed, wind_direction, 
-            humidity, cloud_cover
+            humidity, cloud_cover, visibility
         ))
+
 
         # Get the last inserted weather_id
         weather_id = cursor.lastrowid
@@ -147,3 +186,11 @@ def addWeatherDataFromDb():
     conn.close()
     print("Weather data successfully added to the 'weather_data' table and linked to 'football_games'.")
     
+    
+    
+
+create_weather_table()
+
+# Add weather data and link to football_games table
+print("Fetching weather data and updating tables...")
+addWeatherDataFromDb()
