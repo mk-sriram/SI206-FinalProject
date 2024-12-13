@@ -1,16 +1,16 @@
 {
     "linear_regressions": {
         "temperature": {
-            "slope": 0.17627453695600293,
-            "intercept": 53.771605748053304
+            "slope": 0.176274536955976,
+            "intercept": 53.77160574805393
         },
         "precipitation": {
-            "slope": -2.9560939575163703,
+            "slope": -2.956093957516359,
             "intercept": 58.154633828163675
         },
         "wind_speed": {
-            "slope": -0.3688049832134138,
-            "intercept": 62.037180242251985
+            "slope": -0.3688049832134203,
+            "intercept": 62.03718024225205
         }
     },
     "data": [
