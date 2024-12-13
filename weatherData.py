@@ -48,7 +48,11 @@ def create_weather_table():
 #     DROP TABLE IF EXISTS weather_data;
 # ''')
     cursor.execute('''
-    CREATE TABLE IF NOT EXISTS weather_data (
+    DROP TABLE IF EXISTS weather_data;
+    ''')
+
+    cursor.execute('''
+    CREATE TABLE  weather_data (
         weather_id INTEGER PRIMARY KEY,
         city TEXT NOT NULL,
         latitude REAL,
@@ -59,7 +63,7 @@ def create_weather_table():
         wind_speed REAL,
         wind_direction REAL,
         humidity REAL,
-        cloud_cover REAL
+        cloud_cover REAL,
         visibility REAL
     );
     ''')
@@ -117,7 +121,7 @@ def addWeatherDataFromDb():
 
     conn = sqlite3.connect("football_data.db")
     cursor = conn.cursor()
-
+    #football_data = football_data[:1]
     for game in football_data:
         print(game)
         game_id, game_date, game_time, city, lat, lon = game
@@ -135,14 +139,7 @@ def addWeatherDataFromDb():
         #print(weather_data)
         
         
-        visibility_data = fetch_visibility(lat, lon, game_date, apiKey)
-        visibility = None
-        if "days" in visibility_data and visibility_data["days"]:
-            hours_data = visibility_data["days"][0].get("hours", [])
-            if len(hours_data) > closest_index:
-                visibility = hours_data[closest_index].get("visibility", None)
-
-
+       
 
         # Find the closest time index
         # DON"T do all that the 23rd index will be the 23rd index in that array, just extract the hour value and index 
@@ -158,6 +155,14 @@ def addWeatherDataFromDb():
         wind_direction = hourly["wind_direction_10m"][closest_index]
         humidity = hourly["relative_humidity_2m"][closest_index]
         cloud_cover = hourly["cloud_cover"][closest_index]
+
+        visibility_data = fetch_visibility(lat, lon, game_date, apiKey)
+        visibility = None
+        if "days" in visibility_data and visibility_data["days"]:
+            hours_data = visibility_data["days"][0].get("hours", [])
+            if len(hours_data) > closest_index:
+                visibility = hours_data[closest_index].get("visibility", None)
+
 
         # Insert weather data into weather_data table
         cursor.execute('''
@@ -188,9 +193,3 @@ def addWeatherDataFromDb():
     
     
     
-
-create_weather_table()
-
-# Add weather data and link to football_games table
-print("Fetching weather data and updating tables...")
-addWeatherDataFromDb()
