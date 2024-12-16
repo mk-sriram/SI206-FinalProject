@@ -1,5 +1,5 @@
 from footballData import fetch_games, fetch_venues, combine_data, create_table, addFootBallDataToTable
-from weatherData import create_weather_table, addWeatherDataFromDb
+from weatherData import create_weather_table,create_visibility_table,  addWeatherAndVisibilityDataFromDb
 #Main stuff
 year = 2020
 season_type = "regular"
@@ -23,7 +23,8 @@ print(f"Combined data saved to table.")
 
 #Weather
 create_weather_table()
+create_visibility_table()
 
 # Add weather data and link to football_games table
 print("Fetching weather data and updating tables...")
-addWeatherDataFromDb()
+addWeatherAndVisibilityDataFromDb()

@@ -9,8 +9,6 @@ load_dotenv()
 apiKey = os.getenv("VISUAL")
 
 
-
-
 def fetch_weather(lat, lon, start_date, end_date):
     """
     Fetch hourly weather data for a location using the Open-Meteo SDK.
@@ -40,63 +38,6 @@ def fetch_visibility(lat, lon, date, apiKey):
         print(f"Error fetching visibility data: {e}")
         return {}
 
-def create_weather_table():
-    conn = sqlite3.connect("football_data.db")
-    cursor = conn.cursor()
-    
-#     cursor.execute('''
-#     DROP TABLE IF EXISTS weather_data;
-# ''')
-    cursor.execute('''
-    DROP TABLE IF EXISTS weather_data;
-    ''')
-
-    cursor.execute('''
-    CREATE TABLE  weather_data (
-        weather_id INTEGER PRIMARY KEY,
-        city TEXT NOT NULL,
-        latitude REAL,
-        longitude REAL,
-        weather_date DATE NOT NULL,
-        temperature REAL,
-        precipitation REAL,
-        wind_speed REAL,
-        wind_direction REAL,
-        humidity REAL,
-        cloud_cover REAL,
-        visibility REAL
-    );
-    ''')
-    conn.commit()
-    conn.close()
-    print("Table 'weather_data' created successfully with additional fields.")
-
-def find_closest_time_index(time_list, target_time):
-    
-    """""
-    DON"T do all that the 23rd index will be the 23rd index in that array, just extract the hour value and index 
-    
-    
-    """
-    """
-    Find the index of the closest time in the time_list to the given target_time in Zulu time.
-
-    Args:
-        time_list (list): List of time strings in ISO 8601 format without timezone information (local time).
-        target_time (str): Target time string in ISO 8601 format with 'Z' (UTC).
-
-    Returns:
-        int: Index of the closest time in the list.
-    """
-    target_dt_utc = datetime.strptime(target_time, "%H:%M:%S.%fZ")
-
-    # Parse the time list into naive datetime objects
-    parsed_times = [datetime.strptime(t, "%Y-%m-%dT%H:%M") for t in time_list]
-
-    # Find the index of the closest time
-    closest_index = min(range(len(parsed_times)), key=lambda i: abs(parsed_times[i] - target_dt_utc)) 
-    return closest_index # Return the index and the closest time
-
 def fetch_football_data_from_db():
     """
     Fetch all rows from the football_games table.
@@ -108,83 +49,186 @@ def fetch_football_data_from_db():
     conn.close()
     return rows
 
-def addWeatherDataFromDb(batch_size=25):
-    football_data = fetch_football_data_from_db()
+def create_weather_table():
+    conn = sqlite3.connect("football_data.db")
+    cursor = conn.cursor()
     
+    cursor.execute('DROP TABLE IF EXISTS weather_data;')
+
+    cursor.execute('''
+    CREATE TABLE weather_data (
+        weather_id INTEGER PRIMARY KEY,
+        city TEXT NOT NULL,
+        latitude REAL,
+        longitude REAL,
+        weather_date DATE NOT NULL,
+        temperature REAL,
+        precipitation REAL,
+        wind_speed REAL,
+        wind_direction REAL,
+        humidity REAL,
+        cloud_cover REAL
+    );
+    ''')
+    conn.commit()
+    conn.close()
+    print("Table 'weather_data' created successfully.")
+
+def create_visibility_table():
+    conn = sqlite3.connect("football_data.db")
+    cursor = conn.cursor()
+    
+    cursor.execute('DROP TABLE IF EXISTS visibility_data;')
+
+    cursor.execute('''
+    CREATE TABLE visibility_data (
+        visibility_id INTEGER PRIMARY KEY,
+        latitude REAL,
+        longitude REAL,
+        weather_date DATE NOT NULL,
+        visibility REAL
+    );
+    ''')
+    conn.commit()
+    conn.close()
+    print("Table 'visibility_data' created successfully.")
+
+def fetch_weather_batch(football_data):
+    
+    weather_batch = []
+    for game in football_data:
+        game_id, game_date, _, city, lat, lon = game
+        if not lat or not lon or not game_date:
+            print(f"Skipping game {game_id} due to missing location or date.")
+            continue
+
+        weather_data = fetch_weather(lat, lon, game_date, game_date)
+        if not weather_data or "hourly" not in weather_data:
+            print(f"Failed to fetch weather data for game {game_id}.")
+            continue
+
+        hourly = weather_data["hourly"]
+        hourly_times = hourly["time"]
+        closest_index = int(game[2][:2])  # Extract hour from game_time
+
+        weather_batch.append((
+            city, lat, lon, game_date, 
+            hourly["temperature_2m"][closest_index],
+            hourly["precipitation"][closest_index],
+            hourly["wind_speed_10m"][closest_index],
+            hourly["wind_direction_10m"][closest_index],
+            hourly["relative_humidity_2m"][closest_index],
+            hourly["cloud_cover"][closest_index]
+        ))
+  
+    return weather_batch
+
+def fetch_visibility_batch(football_data):
+    visibility_batch = []
+    for game in football_data:
+        game_id, game_date, _, _, lat, lon = game
+        if not lat or not lon or not game_date:
+            print(f"Skipping game {game_id} due to missing location or date.")
+            continue
+
+        visibility_data = fetch_visibility(lat, lon, game_date, apiKey)
+        if not visibility_data or "days" not in visibility_data or not visibility_data["days"]:
+            print(f"Failed to fetch visibility data for game {game_id}.")
+            continue
+
+        hours_data = visibility_data["days"][0].get("hours", [])
+        closest_index = int(game[2][:2])  # Extract hour from game_time
+        visibility = None
+        if len(hours_data) > closest_index:
+            visibility = hours_data[closest_index].get("visibility", None)
+
+        visibility_batch.append((lat, lon, game_date, visibility))
+
+    return visibility_batch
+
+def store_weather_data(weather_batch, batchNumber):
+    conn = sqlite3.connect("football_data.db")
+    cursor = conn.cursor()
+    
+    cursor.executemany('''
+        INSERT INTO weather_data (
+            city, latitude, longitude, weather_date, temperature, 
+            precipitation, wind_speed, wind_direction, humidity, 
+            cloud_cover
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    ''', weather_batch)
+    weather_ids = [row[0] for row in cursor.execute("SELECT last_insert_rowid()").fetchall()]
+    conn.commit()
+    conn.close()
+    print(f"Weather data batch {batchNumber} inserted successfully")
+    return weather_ids
+
+
+def store_visibility_data(visibility_batch, batchNumber):
+    conn = sqlite3.connect("football_data.db")
+    cursor = conn.cursor()
+
+    cursor.executemany('''
+        INSERT INTO visibility_data (
+            latitude, longitude, weather_date, visibility
+        ) VALUES (?, ?, ?, ?)
+    ''', visibility_batch)
+    visibility_ids = [row[0] for row in cursor.execute("SELECT last_insert_rowid()").fetchall()]
+    conn.commit()
+    conn.close()
+    print(f"Visibility data batch {batchNumber} inserted successfully.")
+    return visibility_ids
+def link_weather_to_football(cursor, football_data, weather_ids):
+    """
+    Link weather IDs to football games in the database.
+    """
+    for idx, game in enumerate(football_data):
+        game_id = game[0]
+        weather_id = weather_ids[idx]
+        cursor.execute("UPDATE football_games SET weather_id = ? WHERE game_id = ?", (weather_id, game_id))
+
+
+def link_visibility_to_football(cursor, football_data, visibility_ids):
+    """
+    Link visibility IDs to football games in the database.
+    """
+    for idx, game in enumerate(football_data):
+        game_id = game[0]
+        visibility_id = visibility_ids[idx]
+        cursor.execute("UPDATE football_games SET visibility_id = ? WHERE game_id = ?", (visibility_id, game_id))
+
+
+def addWeatherAndVisibilityDataFromDb(batch_size=25):
+    football_data = fetch_football_data_from_db()
     if not football_data:
-        print("No football games to process for weather data.")
+        print("No football games to process for weather or visibility data.")
         return
+
+    total_games = len(football_data)
+    print(f"Processing {total_games} games in batches of {batch_size}.")
+
+    weatherBatchNo = 0
+    visibilityBatchNo = 0 
 
     conn = sqlite3.connect("football_data.db")
     cursor = conn.cursor()
 
-    try:
-        total_games = len(football_data)
-        print(f"Processing {total_games} games in batches of {batch_size}.")
+    for batch_start in range(0, total_games, batch_size):
+        batch_games = football_data[batch_start: batch_start + batch_size]
 
-        for batch_start in range(0, total_games, batch_size):
-            batch_games = football_data[batch_start: batch_start + batch_size]
-            batch_inserts = []
-            updates = []
+        weather_batch = fetch_weather_batch(batch_games)
+        if weather_batch:
+            weather_ids = store_weather_data(weather_batch, weatherBatchNo)
+            link_weather_to_football(cursor, batch_games, weather_ids)
+            weatherBatchNo += 1
 
-            for game in batch_games:
-                game_id, game_date, game_time, city, lat, lon = game
+        visibility_batch = fetch_visibility_batch(batch_games)
+        if visibility_batch:
+            visibility_ids = store_visibility_data(visibility_batch, visibilityBatchNo)
+            link_visibility_to_football(cursor, batch_games, visibility_ids)
+            visibilityBatchNo += 1
 
-                if not lat or not lon or not game_date:
-                    print(f"Skipping game {game_id} due to missing location or date.")
-                    continue
+        conn.commit()
+        print(f"Batch {batch_start // batch_size + 1} processed successfully.")
 
-                weather_data = fetch_weather(lat, lon, game_date, game_date)
-                if not weather_data or "hourly" not in weather_data:
-                    print(f"Failed to fetch weather data for game {game_id}.")
-                    continue
-
-                hourly_times = weather_data["hourly"]["time"]
-                closest_index = int(game_time[:2])
-
-                hourly = weather_data["hourly"]
-                temperature = hourly["temperature_2m"][closest_index]
-                precipitation = hourly["precipitation"][closest_index]
-                wind_speed = hourly["wind_speed_10m"][closest_index]
-                wind_direction = hourly["wind_direction_10m"][closest_index]
-                humidity = hourly["relative_humidity_2m"][closest_index]
-                cloud_cover = hourly["cloud_cover"][closest_index]
-
-                visibility_data = fetch_visibility(lat, lon, game_date, apiKey)
-                visibility = None
-                if "days" in visibility_data and visibility_data["days"]:
-                    hours_data = visibility_data["days"][0].get("hours", [])
-                    if len(hours_data) > closest_index:
-                        visibility = hours_data[closest_index].get("visibility", None)
-
-                batch_inserts.append((
-                    city, lat, lon, game_date, temperature, precipitation,
-                    wind_speed, wind_direction, humidity, cloud_cover, visibility
-                ))
-
-                updates.append((game_id,))
-
-            if batch_inserts:
-                cursor.executemany('''
-                    INSERT INTO weather_data (
-                        city, latitude, longitude, weather_date, temperature, 
-                        precipitation, wind_speed, wind_direction, humidity, 
-                        cloud_cover, visibility
-                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-                ''', batch_inserts)
-                conn.commit()
-
-                weather_ids = cursor.execute('SELECT last_insert_rowid()').fetchall()
-                for idx, (weather_id,) in enumerate(weather_ids):
-                    cursor.execute('''
-                        UPDATE football_games SET weather_id = ? WHERE game_id = ?
-                    ''', (weather_id, updates[idx][0]))
-                conn.commit()
-
-            print(f"Batch {batch_start // batch_size + 1} processed successfully.")
-
-    except Exception as e:
-        print(f"Error during batch processing: {e}")
-    finally:
-        conn.close()
-        print("Weather data processed and linked successfully.")
+    conn.close()
