@@ -83,14 +83,16 @@ def create_table():
         point_difference INTEGER,
         game_result TEXT,
         weather_id INTEGER DEFAULT NULL,  -- Foreign key to a weather table (can be NULL initially)
-        FOREIGN KEY (weather_id) REFERENCES weather_table(weather_id)
+        visibility_id INTEGER DEFAULT NULL,
+        FOREIGN KEY (weather_id) REFERENCES weather_data(weather_id),
+        FOREIGN KEY (visibility_id) REFERENCES visibility_data(visibility_id)
     );
     ''')
     conn.commit()
     conn.close()
     print("Table 'football_games' created successfully.")
 
-import sqlite3
+
 
 def addFootBallDataToTable(combined_data, batch_size=25):
     conn = sqlite3.connect("football_data.db")
@@ -99,6 +101,7 @@ def addFootBallDataToTable(combined_data, batch_size=25):
     try:
         count = 0
         total_records = 100 
+        batchCount = 0
         batched_data = []
 
         for game in combined_data:
@@ -118,30 +121,33 @@ def addFootBallDataToTable(combined_data, batch_size=25):
                     game["total_points"],
                     game["point_difference"],
                     game["game_result"],
-                    None 
+                    None ,
+                    None
                 ))
                 count += 1
 
  
                 if len(batched_data) == batch_size:
+                    batchCount+=1
                     cursor.executemany('''
                     INSERT OR REPLACE INTO football_games (
                         game_id, game_date, game_time, city, latitude, longitude, 
                         home_team, away_team, home_team_score, away_team_score, 
-                        winning_team, total_points, point_difference, game_result, weather_id
-                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                        winning_team, total_points, point_difference, game_result, weather_id, visibility_id
+                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                     ''', batched_data)
                     conn.commit()
+                    
                     batched_data = [] 
-
+                    print(f'Added football data batch {batchCount} to the table')
         
         if batched_data:
             cursor.executemany('''
             INSERT OR REPLACE INTO football_games (
                 game_id, game_date, game_time, city, latitude, longitude, 
                 home_team, away_team, home_team_score, away_team_score, 
-                winning_team, total_points, point_difference, game_result, weather_id
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                winning_team, total_points, point_difference, game_result, weather_id, visibility_id
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             ''', batched_data)
             conn.commit()
 

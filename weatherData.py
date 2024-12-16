@@ -38,17 +38,11 @@ def fetch_visibility(lat, lon, date, apiKey):
         print(f"Error fetching visibility data: {e}")
         return {}
 
-def fetch_football_data_from_db():
-    """
-    Fetch all rows from the football_games table.
-    """
-    conn = sqlite3.connect("football_data.db")
+def fetch_football_data_from_db(conn):
     cursor = conn.cursor()
     cursor.execute("SELECT game_id, game_date, game_time, city, latitude, longitude FROM football_games WHERE weather_id IS NULL")
     rows = cursor.fetchall()
-    conn.close()
     return rows
-
 def create_weather_table():
     conn = sqlite3.connect("football_data.db")
     cursor = conn.cursor()
@@ -146,89 +140,102 @@ def fetch_visibility_batch(football_data):
 
     return visibility_batch
 
-def store_weather_data(weather_batch, batchNumber):
-    conn = sqlite3.connect("football_data.db")
+def store_weather_data(conn, weather_batch, batch_number):
     cursor = conn.cursor()
-    
-    cursor.executemany('''
-        INSERT INTO weather_data (
-            city, latitude, longitude, weather_date, temperature, 
-            precipitation, wind_speed, wind_direction, humidity, 
-            cloud_cover
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-    ''', weather_batch)
-    weather_ids = [row[0] for row in cursor.execute("SELECT last_insert_rowid()").fetchall()]
-    conn.commit()
-    conn.close()
-    print(f"Weather data batch {batchNumber} inserted successfully")
-    return weather_ids
+    try:
+        cursor.executemany('''
+            INSERT INTO weather_data (
+                city, latitude, longitude, weather_date, temperature, 
+                precipitation, wind_speed, wind_direction, humidity, 
+                cloud_cover
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ''', weather_batch)
 
+        cursor.execute('SELECT weather_id FROM weather_data ORDER BY weather_id DESC LIMIT ?', (len(weather_batch),))
+        weather_ids = [row[0] for row in cursor.fetchall()]
+        print(f"Weather data batch {batch_number} inserted successfully.")
+        return list(reversed(weather_ids))
+    except sqlite3.OperationalError as e:
+        print(f"Error storing weather data: {e}")
+        return []
+    finally:
+        conn.commit()
 
-def store_visibility_data(visibility_batch, batchNumber):
-    conn = sqlite3.connect("football_data.db")
+def store_visibility_data(conn, visibility_batch, batch_number):
     cursor = conn.cursor()
+    try:
+        cursor.executemany('''
+            INSERT INTO visibility_data (
+                latitude, longitude, weather_date, visibility
+            ) VALUES (?, ?, ?, ?)
+        ''', visibility_batch)
 
-    cursor.executemany('''
-        INSERT INTO visibility_data (
-            latitude, longitude, weather_date, visibility
-        ) VALUES (?, ?, ?, ?)
-    ''', visibility_batch)
-    visibility_ids = [row[0] for row in cursor.execute("SELECT last_insert_rowid()").fetchall()]
-    conn.commit()
-    conn.close()
-    print(f"Visibility data batch {batchNumber} inserted successfully.")
-    return visibility_ids
-def link_weather_to_football(cursor, football_data, weather_ids):
-    """
-    Link weather IDs to football games in the database.
-    """
-    for idx, game in enumerate(football_data):
-        game_id = game[0]
-        weather_id = weather_ids[idx]
-        cursor.execute("UPDATE football_games SET weather_id = ? WHERE game_id = ?", (weather_id, game_id))
+        cursor.execute('SELECT visibility_id FROM visibility_data ORDER BY visibility_id DESC LIMIT ?', (len(visibility_batch),))
+        visibility_ids = [row[0] for row in cursor.fetchall()]
+        print(f"Visibility data batch {batch_number} inserted successfully.")
+        return list(reversed(visibility_ids))
+    except sqlite3.OperationalError as e:
+        print(f"Error storing visibility data: {e}")
+        return []
+    finally:
+        conn.commit()
 
+def link_weather_to_football(conn, football_data, weather_ids):
+    cursor = conn.cursor()
+    try:
+        for idx, game in enumerate(football_data):
+            game_id = game[0]
+            weather_id = weather_ids[idx]
+            cursor.execute("UPDATE football_games SET weather_id = ? WHERE game_id = ?", (weather_id, game_id))
+    except sqlite3.OperationalError as e:
+        print(f"Error linking weather data: {e}")
+    finally:
+        conn.commit()
 
-def link_visibility_to_football(cursor, football_data, visibility_ids):
-    """
-    Link visibility IDs to football games in the database.
-    """
-    for idx, game in enumerate(football_data):
-        game_id = game[0]
-        visibility_id = visibility_ids[idx]
-        cursor.execute("UPDATE football_games SET visibility_id = ? WHERE game_id = ?", (visibility_id, game_id))
-
+def link_visibility_to_football(conn, football_data, visibility_ids):
+    cursor = conn.cursor()
+    try:
+        for idx, game in enumerate(football_data):
+            game_id = game[0]
+            visibility_id = visibility_ids[idx]
+            cursor.execute("UPDATE football_games SET visibility_id = ? WHERE game_id = ?", (visibility_id, game_id))
+    except sqlite3.OperationalError as e:
+        print(f"Error linking visibility data: {e}")
+    finally:
+        conn.commit()
 
 def addWeatherAndVisibilityDataFromDb(batch_size=25):
-    football_data = fetch_football_data_from_db()
-    if not football_data:
-        print("No football games to process for weather or visibility data.")
-        return
+    conn = sqlite3.connect("football_data.db", check_same_thread=False)
+    try:
+        football_data = fetch_football_data_from_db(conn)
+        if not football_data:
+            print("No football games to process for weather or visibility data.")
+            return
 
-    total_games = len(football_data)
-    print(f"Processing {total_games} games in batches of {batch_size}.")
+        total_games = len(football_data)
+        print(f"Processing {total_games} games in batches of {batch_size}.")
 
-    weatherBatchNo = 0
-    visibilityBatchNo = 0 
+        weather_batch_no = 0
+        visibility_batch_no = 0 
 
-    conn = sqlite3.connect("football_data.db")
-    cursor = conn.cursor()
+        for batch_start in range(0, total_games, batch_size):
+            batch_games = football_data[batch_start: batch_start + batch_size]
 
-    for batch_start in range(0, total_games, batch_size):
-        batch_games = football_data[batch_start: batch_start + batch_size]
+            weather_batch = fetch_weather_batch(batch_games)
+            if weather_batch:
+                weather_ids = store_weather_data(conn, weather_batch, weather_batch_no)
+                link_weather_to_football(conn, batch_games, weather_ids)
+                weather_batch_no += 1
 
-        weather_batch = fetch_weather_batch(batch_games)
-        if weather_batch:
-            weather_ids = store_weather_data(weather_batch, weatherBatchNo)
-            link_weather_to_football(cursor, batch_games, weather_ids)
-            weatherBatchNo += 1
+            visibility_batch = fetch_visibility_batch(batch_games)
+            if visibility_batch:
+                visibility_ids = store_visibility_data(conn, visibility_batch, visibility_batch_no)
+                link_visibility_to_football(conn, batch_games, visibility_ids)
+                visibility_batch_no += 1
 
-        visibility_batch = fetch_visibility_batch(batch_games)
-        if visibility_batch:
-            visibility_ids = store_visibility_data(visibility_batch, visibilityBatchNo)
-            link_visibility_to_football(cursor, batch_games, visibility_ids)
-            visibilityBatchNo += 1
+            print(f"Batch {batch_start // batch_size + 1} processed successfully.")
 
-        conn.commit()
-        print(f"Batch {batch_start // batch_size + 1} processed successfully.")
-
-    conn.close()
+    except sqlite3.OperationalError as e:
+        print(f"Database error: {e}")
+    finally:
+        conn.close()
