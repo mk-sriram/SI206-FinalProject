@@ -16,6 +16,7 @@ def load_data():
 
 #initialize lists
 def initialize_dict():
+    #ensuring that the new join command still working with new data set
     data = load_data()
     total_points        = []
     temperature_celsius = []

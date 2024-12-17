@@ -29,10 +29,10 @@ def fetch_football_weather_data():
                           weather_data.temperature, 
                           weather_data.precipitation, 
                           weather_data.wind_speed,
-                          weather_data.visibility
+                          visibility_data.visibility
                    FROM football_games
-                   INNER JOIN weather_data 
-                   ON football_games.weather_id = weather_data.weather_id"""
+                   INNER JOIN weather_data ON football_games.visibility_id = weather_data.weather_id
+                   INNER JOIN visibility_data ON weather_data.weather_id = visibility_data.visibility_id """
     conn = sqlite3.connect(FOOTBALL_DB_FILENAME)
     cursor = conn.cursor()
     cursor.execute(join_command)
