@@ -1,16 +1,16 @@
 {
     "linear_regressions": {
         "temperature": {
-            "slope": 0.18546456907775505,
-            "intercept": 53.26037675200547
+            "slope": 0.17627453695600293,
+            "intercept": 53.771605748053304
         },
         "precipitation": {
-            "slope": -2.826855771168894,
-            "intercept": 57.854726696351676
+            "slope": -2.9560939575163703,
+            "intercept": 58.154633828163675
         },
         "wind_speed": {
-            "slope": -0.316444484752332,
-            "intercept": 61.227080608099826
+            "slope": -0.3688049832134138,
+            "intercept": 62.037180242251985
         }
     },
     "data": [
@@ -386,6 +386,13 @@
             "visibility": 9.9
         },
         {
+            "total_points": 64,
+            "temperature": 23.3,
+            "precipitation": 0.0,
+            "wind_speed": 12.6,
+            "visibility": 9.9
+        },
+        {
             "total_points": 66,
             "temperature": 26.7,
             "precipitation": 0.1,
@@ -414,6 +421,20 @@
             "visibility": 9.9
         },
         {
+            "total_points": 55,
+            "temperature": 19.4,
+            "precipitation": 1.2,
+            "wind_speed": 16.5,
+            "visibility": 2.5
+        },
+        {
+            "total_points": 45,
+            "temperature": 17.6,
+            "precipitation": 0.0,
+            "wind_speed": 8.3,
+            "visibility": 9.9
+        },
+        {
             "total_points": 62,
             "temperature": 29.1,
             "precipitation": 0.0,
@@ -425,6 +446,13 @@
             "temperature": 18.4,
             "precipitation": 0.0,
             "wind_speed": 7.3,
+            "visibility": 9.9
+        },
+        {
+            "total_points": 73,
+            "temperature": 19.4,
+            "precipitation": 0.0,
+            "wind_speed": 1.9,
             "visibility": 9.9
         },
         {
@@ -495,6 +523,13 @@
             "temperature": 28.3,
             "precipitation": 0.0,
             "wind_speed": 9.7,
+            "visibility": 9.9
+        },
+        {
+            "total_points": 76,
+            "temperature": 21.9,
+            "precipitation": 0.0,
+            "wind_speed": 4.9,
             "visibility": 9.9
         },
         {
